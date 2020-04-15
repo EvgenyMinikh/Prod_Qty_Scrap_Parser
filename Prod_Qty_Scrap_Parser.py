@@ -1,25 +1,42 @@
 from openpyxl import load_workbook
 from datetime import datetime, timedelta
 from csv import reader, writer
+from configparser import ConfigParser
 
 # ============================================== #
-SOURCE_WORKBOOK_PATH = "C:\\Temp\\Scrap.xlsx"
-RESULT_CSV_DIRECTORY = "C:\\Temp\\CSV"
-SETTINGS_CSV_PATH = "C:\\Temp\\CSV\\Scrap_Settings.csv"
-
+# SOURCE_WORKBOOK_PATH = "C:\\Temp\\Scrap.xlsx"
+# RESULT_CSV_DIRECTORY = "C:\\Temp\\CSV"
+# SETTINGS_CSV_FILENAME = "C:\\Temp\\CSV\\Scrap_Settings.csv"
 # These constants set beginning and ending dates, using today date as base date
-DATE_FORMAT = '%Y-%m-%d'
-DAYS_BEFORE_TODAY = 40
-DAYS_AFTER_TODAY = 7
-
+# DATE_FORMAT = '%Y-%m-%d'
+# DAYS_BEFORE_TODAY = 40
+# DAYS_AFTER_TODAY = 7
 # These constants set columns and rows with data in the workbook
-DATA_SHEET_NAME = 'Sheet1'
-START_ROW = 2
-SHIFT_COLUMN = 'C'
-DATE_COLUMN = 'E'
+# DATA_SHEET_NAME = 'Sheet1'
+# START_ROW = 2
+# SHIFT_COLUMN = 'C'
+# DATE_COLUMN = 'E'
 # MACHINE_STATS = {'Tread1': ['EU', 'FA'],
 #                  'Tread2': ['EV', 'FB']}
+
+CONFIG_FILENAME = 'config.cfg'
+config = ConfigParser()
+config.read_file(open(CONFIG_FILENAME, encoding="utf8"))
+
+SOURCE_WORKBOOK_PATH = config.get('Paths Config', 'SOURCE_WORKBOOK_PATH').replace('\\', '\\\\')
+RESULT_CSV_DIRECTORY = config.get('Paths Config', 'OUTPUT_CSV_DIRECTORY').replace('\\', '\\\\')
+SETTINGS_CSV_FILENAME = "Scrap_Settings.csv"
+
+DATE_FORMAT = config.get('Common Config', 'OUTPUT_DATE_FORMAT')
+DAYS_BEFORE_TODAY = int(config.get('Common Config', 'NUMBER_OF_DAYS_BEFORE_TODAY'))
+DAYS_AFTER_TODAY = int(config.get('Common Config', 'NUMBER_OF_DAYS_AFTER_TODAY'))
+
+DATA_SHEET_NAME = config.get('Workbook Settings', 'DATA_SHEET_NAME')
+START_ROW = int(config.get('Workbook Settings', 'START_ROW'))
+SHIFT_COLUMN = config.get('Workbook Settings', 'SHIFT_COLUMN')
+DATE_COLUMN = config.get('Workbook Settings', 'DATE_COLUMN')
 # ============================================== #
+
 
 # Function reads machine names and their columns names fom CSV.
 # Function returns dict with machine names and their columns name
@@ -73,7 +90,7 @@ def calculate_new_date(today_date, delta_days):
     return new_date
 
 
-MACHINE_STATS, final_results = read_machines_and_cells(SETTINGS_CSV_PATH)
+MACHINE_STATS, final_results = read_machines_and_cells(SETTINGS_CSV_FILENAME)
 
 # Dates in string representation DD.MM.YYYY
 today_date = datetime.today()
