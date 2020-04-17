@@ -2,6 +2,7 @@ from openpyxl import load_workbook
 from datetime import datetime, timedelta
 from csv import reader, writer
 from configparser import ConfigParser
+from os import path
 
 # ============================================== #
 # SOURCE_WORKBOOK_PATH = "C:\\Temp\\Scrap.xlsx"
@@ -19,13 +20,15 @@ from configparser import ConfigParser
 # MACHINE_STATS = {'Tread1': ['EU', 'FA'],
 #                  'Tread2': ['EV', 'FB']}
 
-CONFIG_FILENAME = 'config.cfg'
+this_script_dir = path.dirname(path.realpath(__file__))
+
+CONFIG_FILENAME = this_script_dir + '\\config.cfg'
 config = ConfigParser()
 config.read_file(open(CONFIG_FILENAME, encoding="utf8"))
 
 SOURCE_WORKBOOK_PATH = config.get('Paths Config', 'SOURCE_WORKBOOK_PATH').replace('\\', '\\\\')
 RESULT_CSV_DIRECTORY = config.get('Paths Config', 'OUTPUT_CSV_DIRECTORY').replace('\\', '\\\\')
-SETTINGS_CSV_FILENAME = "Scrap_Settings.csv"
+SETTINGS_CSV_FILENAME = this_script_dir + "\\Scrap_Settings.csv"
 
 DATE_FORMAT = config.get('Common Config', 'OUTPUT_DATE_FORMAT')
 DAYS_BEFORE_TODAY = int(config.get('Common Config', 'NUMBER_OF_DAYS_BEFORE_TODAY'))

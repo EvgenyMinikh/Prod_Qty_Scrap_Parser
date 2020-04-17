@@ -1,1 +1,1 @@
-pyinstaller -F Prod_Qty_Scrap_Parser.py
+pyinstaller --clean --console -F Prod_Qty_Scrap_Parser.py
