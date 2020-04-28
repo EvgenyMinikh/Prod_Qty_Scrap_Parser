@@ -26,8 +26,8 @@ CONFIG_FILENAME = this_script_dir + '\\config.cfg'
 config = ConfigParser()
 config.read_file(open(CONFIG_FILENAME, encoding="utf8"))
 
-SOURCE_WORKBOOK_PATH = config.get('Paths Config', 'SOURCE_WORKBOOK_PATH').replace('\\', '\\\\')
-RESULT_CSV_DIRECTORY = config.get('Paths Config', 'OUTPUT_CSV_DIRECTORY').replace('\\', '\\\\')
+SOURCE_WORKBOOK_PATH = config.get('Paths Config', 'SOURCE_WORKBOOK_PATH') #.replace('\\', '\\\\')
+RESULT_CSV_DIRECTORY = config.get('Paths Config', 'OUTPUT_CSV_DIRECTORY') #.replace('\\', '\\\\')
 SETTINGS_CSV_FILENAME = this_script_dir + "\\Scrap_Settings.csv"
 
 DATE_FORMAT = config.get('Common Config', 'OUTPUT_DATE_FORMAT')
