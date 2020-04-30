@@ -143,6 +143,7 @@ while shift_date < end_date:
             data_to_add.append(round(cell_value))
 
         # data_to_add.append(machine_name)
+        data_to_add[1] = round(data_to_add[1] / 10)  # Scrap recycle / 10
         final_results[machine_name][shift_number].append(data_to_add)
 
     row_number += 1
