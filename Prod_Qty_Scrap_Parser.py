@@ -97,7 +97,6 @@ MACHINE_STATS, final_results = read_machines_and_cells(SETTINGS_CSV_FILENAME)
 
 # Dates in string representation DD.MM.YYYY
 today_date = datetime.today()
-#today_date = datetime.strptime('30/12/2020 00:00:00', '%d/%m/%Y %H:%M:%S')
 today_date_string = today_date.strftime(DATE_FORMAT)
 
 start_date = calculate_new_date(today_date, -1 * DAYS_BEFORE_TODAY)
@@ -137,7 +136,7 @@ while shift_date < end_date:
             cell_name = column_name + str(row_number)
             cell_value = ws[cell_name].value
 
-            if cell_value == '#DIV/0!':
+            if (cell_value == '#DIV/0!') or (cell_value == '#REF!'):
                 cell_value = 0
 
             data_to_add.append(round(cell_value))
