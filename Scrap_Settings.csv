@@ -1,10 +1,19 @@
-Machine Name;Column 1;Column 2
-Tread1;EU;FA
-Tread2;EV;FB
-Tread3;EW;FC
-Tread4;EX;FD
-Tread6;EY;FE
-Tread7;EZ;FF
-Tests;FG;FH
-Unwinded;FI;FJ
-Unwinded_Tread;FK;FL
+Graph column names;Generated CSV Name;Column 1;Column 2;...
+Date,Recycle,Waste;Tread1_rec_waste;C;D
+Date,Recycle,Waste;Tread2_rec_waste;G;H
+Date,Recycle,Waste;Tread3_rec_waste;K;L
+Date,Recycle,Waste;Tread4_rec_waste;O;P
+Date,Recycle,Waste;Tread6_rec_waste;S;T
+Date,Recycle,Waste;Tread7_rec_waste;W;X
+Date,OEE2;Tread1_OEE2;E
+Date,OEE2;Tread2_OEE2;I
+Date,OEE2;Tread3_OEE2;M
+Date,OEE2;Tread4_OEE2;Q
+Date,OEE2;Tread6_OEE2;U
+Date,OEE2;Tread7_OEE2;Y
+Date,Stops;Tread1_stop;F
+Date,Stops;Tread2_stop;J
+Date,Stops;Tread3_stop;N
+Date,Stops;Tread4_stop;R
+Date,Stops;Tread6_stop;V
+Date,Stops;Tread7_stop;Z

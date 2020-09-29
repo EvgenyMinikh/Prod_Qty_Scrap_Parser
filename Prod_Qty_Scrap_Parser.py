@@ -5,29 +5,14 @@ from configparser import ConfigParser
 from os import path
 
 # ============================================== #
-# SOURCE_WORKBOOK_PATH = "C:\\Temp\\Scrap.xlsx"
-# RESULT_CSV_DIRECTORY = "C:\\Temp\\CSV"
-# SETTINGS_CSV_FILENAME = "C:\\Temp\\CSV\\Scrap_Settings.csv"
-# These constants set beginning and ending dates, using today date as base date
-# DATE_FORMAT = '%Y-%m-%d'
-# DAYS_BEFORE_TODAY = 40
-# DAYS_AFTER_TODAY = 7
-# These constants set columns and rows with data in the workbook
-# DATA_SHEET_NAME = 'Sheet1'
-# START_ROW = 2
-# SHIFT_COLUMN = 'C'
-# DATE_COLUMN = 'E'
-# MACHINE_STATS = {'Tread1': ['EU', 'FA'],
-#                  'Tread2': ['EV', 'FB']}
-
 this_script_dir = path.dirname(path.realpath(__file__))
 
 CONFIG_FILENAME = this_script_dir + '\\config.cfg'
 config = ConfigParser()
-config.read_file(open(CONFIG_FILENAME, encoding="utf8"))
+config.read_file(open(CONFIG_FILENAME))
 
-SOURCE_WORKBOOK_PATH = config.get('Paths Config', 'SOURCE_WORKBOOK_PATH') #.replace('\\', '\\\\')
-RESULT_CSV_DIRECTORY = config.get('Paths Config', 'OUTPUT_CSV_DIRECTORY') #.replace('\\', '\\\\')
+SOURCE_WORKBOOK_PATH = config.get('Paths Config', 'SOURCE_WORKBOOK_PATH')
+RESULT_CSV_DIRECTORY = config.get('Paths Config', 'OUTPUT_CSV_DIRECTORY')
 SETTINGS_CSV_FILENAME = this_script_dir + "\\Scrap_Settings.csv"
 
 DATE_FORMAT = config.get('Common Config', 'OUTPUT_DATE_FORMAT')
@@ -53,25 +38,30 @@ def read_machines_and_cells(CSV_filepath):
         next(csv_reader)
 
         for line in csv_reader:
+            column_names = line.pop(0)  # Get column names for future CSVs. Column names separated by ','
             key = line.pop(0)
             value = line
             result[key] = value
-            final_result[key] = {'1': [], '2': [], '3': [], '4': []}
+            final_result[key] = {'0': '', '1': [], '2': [], '3': [], '4': []}  # key = shift number, value = list with shift data 0 - for column header
+            final_result[key]['0'] = column_names
 
     return result, final_result
 
 
 # Function writes final prepared data into CSV files
 def write_data_to_files(result_data):
-    CSV_HEADER = ['Date', 'Scrap Recycle', 'Scrap']
+    # csv_header = ['Date', 'Scrap Recycle', 'Scrap']
 
     for machine_name, shift_data in result_data.items():
+        csv_header = shift_data['0'].split(',')  # Get list for CSV header
+        del shift_data['0']  # Remove header info from shift data
+
         for shift_key in shift_data:
             csv_filename = "{}\\{}_Shift_{}_Report.csv".format(RESULT_CSV_DIRECTORY, machine_name, shift_key)
 
             with open(csv_filename, mode='w', newline='') as csv_file:
                 csv_writer = writer(csv_file, delimiter=',')
-                csv_writer.writerow(CSV_HEADER)
+                csv_writer.writerow(csv_header)
 
                 for row in shift_data[shift_key]:
                     csv_writer.writerow(row)
@@ -140,9 +130,11 @@ while shift_date < end_date:
                 cell_value = 0
 
             data_to_add.append(round(cell_value))
+            # data_to_add.append(cell_value)
 
         # data_to_add.append(machine_name)
-        data_to_add[1] = round(data_to_add[1] / 10)  # Scrap recycle / 10
+        if 'rec_waste' in machine_name:
+            data_to_add[1] = round(data_to_add[1] / 10)  # Scrap recycle / 10
         final_results[machine_name][shift_number].append(data_to_add)
 
     row_number += 1
